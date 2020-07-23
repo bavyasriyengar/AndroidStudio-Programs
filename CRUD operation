@@ -1,0 +1,252 @@
+activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".MainActivity">
+<TextView
+android:layout_marginTop="50dp"android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginBottom="12dp"
+android:text="AUTOMOBILE"
+android:textAlignment="center"
+android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+<EditText
+android:id="@+id/carid"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:hint="Enter the ID"
+android:layout_marginTop="150dp"/>
+<EditText
+android:id="@+id/name"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:hint="Enter the name"
+android:layout_marginTop="200dp"/>
+<EditText
+android:id="@+id/model"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:hint="Enter the Model"
+android:layout_marginTop="250dp"/>
+<EditText
+android:id="@+id/year"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:hint="Enter the year"
+android:layout_marginTop="300dp"/>
+<Button
+android:id="@+id/add"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Insert"
+android:layout_marginTop="400dp"/>
+<Button
+android:id="@+id/read"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Read"
+android:layout_marginTop="400dp"
+android:layout_marginLeft="150dp"/>
+<Button
+android:id="@+id/update"
+android:layout_width="wrap_content"android:layout_height="wrap_content"
+android:text="Update"
+android:layout_marginLeft="300dp"
+android:layout_marginTop="400dp"/>
+<Button
+android:id="@+id/delete"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Delete"
+android:layout_marginTop="500dp"
+android:layout_marginLeft="70dp"/>
+<Button
+android:id="@+id/email"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Email"
+android:layout_marginLeft="220dp"
+android:layout_marginTop="500dp"/>
+</RelativeLayout>
+MainActivity.java
+package com.example.crudoperation;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+public class MainActivity extends AppCompatActivity {
+DataBaseHelper mydb;
+EditText t1,t2,t3,t4;
+Button b1,b2,b3,b4,b5;
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState);
+setContentView(R.layout.activity_main);
+mydb=new DataBaseHelper(this);
+t1=findViewById(R.id.carid);
+t2=findViewById(R.id.name);
+t3=findViewById(R.id.model);t4=findViewById(R.id.year);
+b1=findViewById(R.id.add);
+b2=findViewById(R.id.read);
+b3=findViewById(R.id.update);
+b4=findViewById(R.id.delete);
+b5=findViewById(R.id.email);
+b1.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View view) {
+boolean
+inserted=mydb.insert(t1.getText().toString(),t2.getText().toString(),t3.getText().toString(),t4.getText
+().toString());
+if(inserted=true){
+Toast.makeText(MainActivity.this,"Data inserted",Toast.LENGTH_LONG).show();
+}
+else {
+Toast.makeText(MainActivity.this,"Error while
+inserting",Toast.LENGTH_LONG).show();
+}
+}
+});
+b2.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View view) {
+Cursor result=mydb.getdata();
+if (result.getCount()==0){
+mssg("no data found","error");
+return;
+}
+StringBuffer buffer=new StringBuffer();
+while (result.moveToNext()){
+buffer.append("ID="+result.getString(0)+"\n");
+buffer.append("ID="+result.getString(1)+"\n");
+buffer.append("ID="+result.getString(2)+"\n");
+buffer.append("ID="+result.getString(3)+"\n\n");
+}
+mssg("data",buffer.toString());
+}
+});
+b3.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View view) {
+boolean
+update=mydb.update(t1.getText().toString(),t2.getText().toString(),t3.getText().toString(),t4.getText
+().toString());
+if(update=true){
+Toast.makeText(MainActivity.this,"Data updated",Toast.LENGTH_LONG).show();
+}
+else {Toast.makeText(MainActivity.this,"Error while
+updating",Toast.LENGTH_LONG).show();
+}
+}
+});
+b4.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View view) {
+Integer delete=mydb.delete(t1.getText().toString());
+if(delete!=0){
+Toast.makeText(MainActivity.this,"Data deleted",Toast.LENGTH_LONG).show();
+}
+else {
+Toast.makeText(MainActivity.this,"Error while
+deleting",Toast.LENGTH_LONG).show();
+}
+}
+});
+b5.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) {res=c.list(listing);
+Intent i=new Intent(Intent.ACTION_SENDTO);
+i.setData(Uri.parse(("mailto:")));
+i.putExtra(Intent.EXTRA_EMAIL,"xxx@gmail.com");
+i.putExtra(Intent.EXTRA_SUBJECT,"message");
+// i.setType("text/plain");
+i.putExtra(Intent.EXTRA_TEXT,res);
+try
+{
+startActivity(Intent.createChooser(i,""));
+}
+catch(Exception e)
+{
+Toast.makeText(MainActivity.this,"mail failed",Toast.LENGTH_SHORT).show();
+e.printStackTrace();
+}
+}
+});
+}
+public void mssg(String title,String messg){
+AlertDialog.Builder builder=new AlertDialog.Builder(this);
+builder.setCancelable(true);
+builder.setTitle(title);
+builder.setMessage(messg);
+builder.show();
+}
+}
+Databasehelper.javapackage com.example.crudoperation;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import androidx.annotation.Nullable;
+import java.util.Scanner;
+public class DataBaseHelper extends SQLiteOpenHelper {
+public static final String DATABASE_NAME="crud.db";
+public static final String TABLE_NAME="crudop";
+public static final String COL_1="id";
+public static final String COL_2="name";
+public static final String COL_3="model";
+public static final String COL_4="year";
+public DataBaseHelper(@Nullable Context context) {
+super(context, DATABASE_NAME, null, 1);
+SQLiteDatabase db=this.getWritableDatabase();
+}
+public void onCreate(SQLiteDatabase db){
+db.execSQL("create table "+TABLE_NAME+"(ID TEXT PRIMARY KEY,NAME
+TEXT,MODEL TEXT,YEAR TEXT)");
+}
+public void onUpgrade(SQLiteDatabase db,int oldVersion, int newVersion){
+db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
+onCreate(db);
+}
+public boolean insert(String id,String name, String model, String year){
+SQLiteDatabase db=this.getWritableDatabase();
+ContentValues values=new ContentValues();
+values.put(COL_1,id);
+values.put(COL_2,name);
+values.put(COL_3,model);
+values.put(COL_4,year);
+long result=db.insert(TABLE_NAME,null,values);
+if (result==-1){
+return false;
+}
+else {
+return true;
+}
+}
+public Cursor getdata(){
+SQLiteDatabase db=this.getWritableDatabase();
+Cursor result=db.rawQuery("select * from "+TABLE_NAME,null);
+return result;
+}
+public boolean update(String id,String name, String model, String year){
+SQLiteDatabase db=this.getWritableDatabase();
+ContentValues values=new ContentValues();
+values.put(COL_1,id);
+values.put(COL_2,name);
+values.put(COL_3,model);
+values.put(COL_4,year);
+db.update(TABLE_NAME,values,"id=?",new String[] {id});
+return true;
+}
+public Integer delete(String id){
+SQLiteDatabase db=this.getWritableDatabase();
+return db.delete(TABLE_NAME,"id=?",new String[] {id});
+}
+}
